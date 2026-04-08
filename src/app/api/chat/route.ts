@@ -1,28 +1,23 @@
-import Anthropic from "@anthropic-ai/sdk";
+import {
+  BedrockRuntimeClient,
+  ConverseCommand,
+} from "@aws-sdk/client-bedrock-runtime";
 import { auth } from "@clerk/nextjs/server";
 import { AGENT_PROMPTS } from "@/lib/agent-prompts";
 import { AGENT_DISPLAY_NAMES } from "@/lib/agents";
 import { routeToAgent } from "@/lib/hermes-router";
 
-function extractAssistantText(content: Anthropic.Message["content"]): string {
-  if (!Array.isArray(content)) return "";
-  return content
-    .filter((block): block is Anthropic.TextBlock => block.type === "text")
-    .map((block) => block.text)
-    .join("\n");
-}
+const BEDROCK_MODEL_ID =
+  process.env.BEDROCK_MODEL_ID ?? "us.deepseek.deepseek-r1-20250528-v1:0";
+
+const bedrock = new BedrockRuntimeClient({
+  region: process.env.AWS_REGION ?? "us-east-1",
+});
 
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json(
-      { error: "ANTHROPIC_API_KEY is not configured" },
-      { status: 503 },
-    );
   }
 
   let body: { message?: string; projectSlug?: string; agentId?: string };
@@ -37,7 +32,10 @@ export async function POST(req: Request) {
     return Response.json({ error: "message is required" }, { status: 400 });
   }
   if (!projectSlug || typeof projectSlug !== "string") {
-    return Response.json({ error: "projectSlug is required" }, { status: 400 });
+    return Response.json(
+      { error: "projectSlug is required" },
+      { status: 400 },
+    );
   }
 
   const resolvedAgent =
@@ -48,16 +46,19 @@ export async function POST(req: Request) {
   const systemPrompt = AGENT_PROMPTS[resolvedAgent] ?? AGENT_PROMPTS.don;
   const projectContext = `You are helping with the ${projectSlug} project on the Quik Nation Marketing Hub.`;
 
-  const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const response = await bedrock.send(
+    new ConverseCommand({
+      modelId: BEDROCK_MODEL_ID,
+      system: [{ text: `${systemPrompt}\n\nContext: ${projectContext}` }],
+      messages: [{ role: "user", content: [{ text: message }] }],
+      inferenceConfig: { maxTokens: 300 },
+    }),
+  );
 
-  const msg = await anthropic.messages.create({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 300,
-    system: `${systemPrompt}\n\nContext: ${projectContext}`,
-    messages: [{ role: "user", content: message }],
-  });
-
-  const text = extractAssistantText(msg.content);
+  const text = (response.output?.message?.content ?? [])
+    .filter((b) => b.text !== undefined)
+    .map((b) => b.text!)
+    .join("\n");
 
   return Response.json({
     agent: resolvedAgent,
