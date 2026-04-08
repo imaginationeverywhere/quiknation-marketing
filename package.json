@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
-    "pages:build": "npx @cloudflare/next-on-pages@1",
+    "pages:build": "pnpm dlx vercel build && node -e \"const fs=require('fs');const p='.vercel/output/functions/_error.func';try{fs.rmSync(p,{recursive:true,force:true});console.log('Removed _error.func (allows _not-found to be auto-ignored by adapter)');}catch(e){console.log('_error.func not found, skipping');}\" && node_modules/.bin/next-on-pages --skip-build",
     "start": "next start -p 3001",
     "lint": "next lint"
   },
