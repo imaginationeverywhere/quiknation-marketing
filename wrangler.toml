@@ -1,13 +1,9 @@
 name = "quiknation-marketing"
 compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
 
-[env.production]
-route = "marketing.quiknation.com/*"
-
-[build]
-command = "pnpm build"
-cwd = "."
-watch_dir = "src"
-
-[site]
-bucket = "./.next/static"
+[vars]
+NEXT_PUBLIC_APP_URL = "https://marketing.quiknation.com"
+AWS_REGION = "us-east-1"
+BEDROCK_MODEL_ID = "us.deepseek.deepseek-r1-20250528-v1:0"
