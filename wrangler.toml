@@ -1,0 +1,13 @@
+name = "quiknation-marketing"
+compatibility_date = "2025-01-01"
+
+[env.production]
+route = "marketing.quiknation.com/*"
+
+[build]
+command = "pnpm build"
+cwd = "."
+watch_dir = "src"
+
+[site]
+bucket = "./.next/static"
