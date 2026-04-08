@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { MarketingHeader } from "@/components/MarketingHeader";
 
 export default function ProjectsLayout({

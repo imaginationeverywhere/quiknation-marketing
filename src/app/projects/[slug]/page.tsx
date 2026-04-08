@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { notFound } from "next/navigation";
 import { getProjectBySlug } from "@/lib/projects";
 import { ProjectWorkspace } from "@/components/ProjectWorkspace";
