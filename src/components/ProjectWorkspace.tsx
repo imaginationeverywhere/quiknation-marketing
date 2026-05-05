@@ -7,7 +7,7 @@ import { useMarketingBrief } from "@/lib/use-marketing-brief";
 import { useMarketingChat } from "@/lib/use-marketing-chat";
 import { AgentChatBubble } from "./AgentChatBubble";
 import { AgentPanel } from "./AgentPanel";
-import { HermesChatInput } from "./HermesChatInput";
+import { ClaraChatInput } from "./ClaraChatInput";
 import { PaperclipBrief } from "./PaperclipBrief";
 import { VoiceStudioLink } from "./VoiceStudioLink";
 
@@ -177,7 +177,7 @@ export function ProjectWorkspace({ project }: ProjectWorkspaceProps) {
             ) : null}
           </div>
 
-          <HermesChatInput
+          <ClaraChatInput
             projectSlug={slug}
             selectedAgentId={selectedAgentId}
             onClearAgent={() => setSelectedAgentId(null)}

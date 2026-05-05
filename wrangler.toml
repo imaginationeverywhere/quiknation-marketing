@@ -5,5 +5,3 @@ pages_build_output_dir = ".vercel/output/static"
 
 [vars]
 NEXT_PUBLIC_APP_URL = "https://marketing.quiknation.com"
-AWS_REGION = "us-east-1"
-BEDROCK_MODEL_ID = "us.deepseek.deepseek-r1-20250528-v1:0"

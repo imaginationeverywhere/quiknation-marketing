@@ -7,10 +7,9 @@ import {
 import { auth } from "@clerk/nextjs/server";
 import { AGENT_PROMPTS } from "@/lib/agent-prompts";
 import { AGENT_DISPLAY_NAMES } from "@/lib/agents";
-import { routeToAgent } from "@/lib/hermes-router";
+import { routeToAgent } from "@/lib/clara-router";
 
-const BEDROCK_MODEL_ID =
-  process.env.BEDROCK_MODEL_ID ?? "us.deepseek.deepseek-r1-20250528-v1:0";
+const BEDROCK_MODEL_ID = process.env.BEDROCK_MODEL_ID ?? "";
 
 const bedrock = new BedrockRuntimeClient({
   region: process.env.AWS_REGION ?? "us-east-1",

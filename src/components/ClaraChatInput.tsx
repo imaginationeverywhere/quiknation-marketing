@@ -4,7 +4,7 @@ import { Loader2, Send } from "lucide-react";
 import { useCallback, useState } from "react";
 import { AGENT_DISPLAY_NAMES } from "@/lib/agents";
 
-type HermesChatInputProps = {
+type ClaraChatInputProps = {
   projectSlug: string;
   selectedAgentId: string | null;
   onClearAgent: () => void;
@@ -12,13 +12,13 @@ type HermesChatInputProps = {
   disabled?: boolean;
 };
 
-export function HermesChatInput({
+export function ClaraChatInput({
   projectSlug,
   selectedAgentId,
   onClearAgent,
   onSend,
   disabled,
-}: HermesChatInputProps) {
+}: ClaraChatInputProps) {
   const [value, setValue] = useState("");
   const [sending, setSending] = useState(false);
 
@@ -36,7 +36,7 @@ export function HermesChatInput({
 
   const routingLabel = selectedAgentId
     ? `Direct: ${AGENT_DISPLAY_NAMES[selectedAgentId] ?? selectedAgentId}`
-    : "Hermes routing (auto)";
+    : "Clara routing (auto)";
 
   return (
     <div className="border-t border-[#1A1A1A] bg-[#050505] pt-4">
@@ -52,7 +52,7 @@ export function HermesChatInput({
               onClick={onClearAgent}
               className="text-[#7BC8D8] hover:underline"
             >
-              Use Hermes
+              Use Clara
             </button>
           ) : null}
         </span>
